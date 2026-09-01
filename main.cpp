@@ -1,25 +1,17 @@
+#include "scanner.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 
-enum class TokenType {
-  // single char tokens
-  EQ,
-  SEMICOL,
-
-  // multi char tokens
-
-  // literals
-  STR,
-  NUM,
-
-  // keywords
-  LET
-};
-
 void run(std::stringstream &source) {
   std::cout << "out: " << source.str() << '\n';
+  Scanner scanner(source.str());
+  auto tokens = scanner.scanTokens();
+  // print for now
+  for (auto token : tokens) {
+    std::cout << token;
+  }
 }
 
 void runFile(std::string path) {
