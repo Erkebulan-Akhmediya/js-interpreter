@@ -9,9 +9,37 @@
 enum class TokenType {
   // single char tokens
   EQ,
+  GREATER,
+  LESS,
+  EXCLAMATION,
   SEMICOL,
+  MINUS,
+  PLUS,
+  SLASH,
+  PERCENT,
+  STAR,
+  COMMA,
+  SINGLE_QUOTE,
+  DOUBLE_QUOTE,
+  LEFT_BRACET,
+  RIGHT_BRACET,
+  LEFT_CURLY_BRACET,
+  RIGHT_CURLY_BRACET,
+  AND,
+  OR,
 
   // multi char tokens
+  DOUBLE_EQ,
+  GREATER_EQ,
+  LESS_EQ,
+  EXCLAMATION_EQ,
+  INCREMENT,
+  DECREMENT,
+  PLUS_EQ,
+  MINUS_EQ,
+  STAR_EQ,
+  SLASH_EQ,
+  PERCENT_EQ,
 
   // literals
   STR,

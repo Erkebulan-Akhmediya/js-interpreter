@@ -9,11 +9,18 @@ class Scanner {
 private:
   std::string source;
   std::vector<Token> tokens;
-  int start = 0;
-  int current = 0;
+  size_t start = 0;
+  size_t current = 0;
+
+  void scanToken();
+  void addToken(TokenType type);
+  void addToken(TokenType type, std::any literal);
+
+  char advance();
+  char peek();
+  bool match(char expected);
 
   bool is_at_end();
-  void scanToken();
 
 public:
   Scanner(std::string p_source);
