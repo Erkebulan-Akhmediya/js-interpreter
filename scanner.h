@@ -13,6 +13,7 @@ private:
   int current = 0;
 
   bool is_at_end();
+  void scanToken();
 
 public:
   Scanner(std::string p_source);

@@ -18,7 +18,9 @@ enum class TokenType {
   NUM,
 
   // keywords
-  LET
+  LET,
+
+  END
 };
 
 struct Token {
