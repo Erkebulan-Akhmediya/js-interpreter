@@ -44,9 +44,17 @@ enum class TokenType {
   // literals
   STR,
   NUM,
+  IDENTIFIER, // variable, function, class, etc
 
   // keywords
   LET,
+  IF,
+  ELSE,
+  FOR,
+  WHILE,
+  FUNCTION,
+  CONST,
+  VAR,
 
   END
 };

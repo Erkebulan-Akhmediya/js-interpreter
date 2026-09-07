@@ -3,10 +3,13 @@
 
 #include "token.h"
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 class Scanner {
 private:
+  const static std::unordered_map<std::string, TokenType> keywords;
+
   std::string source;
   std::vector<Token> tokens;
   size_t start = 0;
@@ -23,9 +26,11 @@ private:
 
   void string();
   void number();
+  void identifier();
 
   bool is_at_end();
   inline bool isDigit(char c);
+  inline bool isAlpha(char c);
 
 public:
   Scanner(std::string p_source);

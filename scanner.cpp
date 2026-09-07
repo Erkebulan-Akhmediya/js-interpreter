@@ -1,8 +1,16 @@
 #include "scanner.h"
 #include "token.h"
 #include <any>
+#include <filesystem>
 #include <string>
 #include <vector>
+
+const std::unordered_map<std::string, TokenType> Scanner::keywords = {
+    {"let", TokenType::LET},     {"if", TokenType::IF},
+    {"else", TokenType::ELSE},   {"for", TokenType::FOR},
+    {"while", TokenType::WHILE}, {"function", TokenType::FUNCTION},
+    {"const", TokenType::CONST}, {"var", TokenType::VAR},
+};
 
 Scanner::Scanner(std::string p_source) : source(p_source) {}
 
@@ -100,6 +108,9 @@ void Scanner::scanToken() {
     break;
   default:
     if (isDigit(c)) {
+      number();
+    } else if (isAlpha(c)) {
+      identifier();
     }
   }
 }
@@ -152,7 +163,25 @@ void Scanner::number() {
   addToken(TokenType::NUM, std::stod(source.substr(start, current)));
 }
 
+void Scanner::identifier() {
+  while (isAlpha(peek()))
+    advance();
+
+  std::string text = source.substr(start, current);
+
+  auto type = keywords.find(text);
+  if (type == keywords.end()) {
+    addToken(TokenType::IDENTIFIER);
+  } else {
+    addToken(type->second);
+  }
+}
+
 inline bool Scanner::isDigit(char c) { return c >= '0' && c <= '9'; }
+
+inline bool Scanner::isAlpha(char c) {
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
 
 void Scanner::addToken(TokenType type) { addToken(type, nullptr); }
 
