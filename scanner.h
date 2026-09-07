@@ -20,6 +20,8 @@ private:
   char peek();
   bool match(char expected);
 
+  void string();
+
   bool is_at_end();
 
 public:

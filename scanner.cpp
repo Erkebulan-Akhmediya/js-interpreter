@@ -93,6 +93,11 @@ void Scanner::scanToken() {
   case '|':
     addToken(TokenType::OR);
     break;
+  case ' ':
+  case '\n':
+  case '\t':
+  case '\r':
+    break;
   }
 }
 
@@ -110,14 +115,25 @@ bool Scanner::match(char expected) {
 
 char Scanner::peek() {
   if (is_at_end())
-    return '\n';
+    return '\0';
   return source.at(current);
+}
+
+void Scanner::string() {
+  while (peek() != '"') {
+    advance();
+    if (peek() != '\n' || is_at_end())
+      return;
+  }
+  advance();
+
+  std::string value = source.substr(start + 1, current - 1);
+  addToken(TokenType::STR, value);
 }
 
 void Scanner::addToken(TokenType type) { addToken(type, nullptr); }
 
 void Scanner::addToken(TokenType type, std::any literal) {
-  using namespace std;
-  string text = source.substr(start, current);
+  std::string text = source.substr(start, current);
   tokens.push_back({type, text, literal});
 }
