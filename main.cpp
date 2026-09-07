@@ -5,7 +5,6 @@
 #include <string>
 
 void run(std::stringstream &source) {
-  std::cout << "out: " << source.str() << '\n';
   Scanner scanner(source.str());
   auto tokens = scanner.scanTokens();
   // print for now

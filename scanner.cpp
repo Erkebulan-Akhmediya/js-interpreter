@@ -1,7 +1,5 @@
 #include "scanner.h"
 #include "token.h"
-#include <any>
-#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -21,7 +19,7 @@ std::vector<Token> Scanner::scanTokens() {
     start = current;
     scanToken();
   }
-  tokens.push_back({TokenType::END, "", nullptr});
+  tokens.push_back({TokenType::END, "", std::nullopt});
   return tokens;
 }
 
@@ -183,9 +181,10 @@ inline bool Scanner::isAlpha(char c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-void Scanner::addToken(TokenType type) { addToken(type, nullptr); }
+void Scanner::addToken(TokenType type) { addToken(type, std::nullopt); }
 
-void Scanner::addToken(TokenType type, std::any literal) {
+void Scanner::addToken(
+    TokenType type, std::optional<std::variant<std::string, double>> literal) {
   std::string text = source.substr(start, current);
   tokens.push_back({type, text, literal});
 }

@@ -17,7 +17,8 @@ private:
 
   void scanToken();
   void addToken(TokenType type);
-  void addToken(TokenType type, std::any literal);
+  void addToken(TokenType type,
+                std::optional<std::variant<std::string, double>> literal);
 
   char advance();
   char peek();

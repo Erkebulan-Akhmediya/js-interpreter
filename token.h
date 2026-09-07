@@ -3,8 +3,10 @@
 
 #include <any>
 #include <concepts>
+#include <optional>
 #include <ostream>
 #include <string>
+#include <variant>
 
 enum class TokenType {
   // single char tokens
@@ -62,9 +64,10 @@ enum class TokenType {
 struct Token {
   TokenType type;
   std::string lexeme;
-  std::any literal;
+  std::optional<std::variant<std::string, double>> literal;
 
-  Token(TokenType p_type, std::string p_lexeme, std::any p_literal);
+  Token(TokenType p_type, std::string p_lexeme,
+        std::optional<std::variant<std::string, double>> p_literal);
 };
 
 std::ostream &operator<<(std::ostream &os, Token token);
