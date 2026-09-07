@@ -98,6 +98,9 @@ void Scanner::scanToken() {
   case '\t':
   case '\r':
     break;
+  default:
+    if (isDigit(c)) {
+    }
   }
 }
 
@@ -119,6 +122,12 @@ char Scanner::peek() {
   return source.at(current);
 }
 
+char Scanner::peekNext() {
+  if (current + 1 >= source.size())
+    return '\0';
+  return source.at(current + 1);
+}
+
 void Scanner::string() {
   while (peek() != '"') {
     advance();
@@ -130,6 +139,20 @@ void Scanner::string() {
   std::string value = source.substr(start + 1, current - 1);
   addToken(TokenType::STR, value);
 }
+
+void Scanner::number() {
+  while (isDigit(peek()))
+    advance();
+
+  if (peek() == '.' && isDigit(peekNext())) {
+    advance();
+    while (isDigit(peek()))
+      advance();
+  }
+  addToken(TokenType::NUM, std::stod(source.substr(start, current)));
+}
+
+inline bool Scanner::isDigit(char c) { return c >= '0' && c <= '9'; }
 
 void Scanner::addToken(TokenType type) { addToken(type, nullptr); }
 

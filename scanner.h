@@ -18,11 +18,14 @@ private:
 
   char advance();
   char peek();
+  char peekNext();
   bool match(char expected);
 
   void string();
+  void number();
 
   bool is_at_end();
+  inline bool isDigit(char c);
 
 public:
   Scanner(std::string p_source);
