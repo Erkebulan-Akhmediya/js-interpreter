@@ -9,7 +9,7 @@ void run(std::stringstream &source) {
   auto tokens = scanner.scanTokens();
   // print for now
   for (auto token : tokens) {
-    std::cout << token;
+    std::cout << token << '\n';
   }
 }
 

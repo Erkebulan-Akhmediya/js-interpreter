@@ -145,7 +145,7 @@ void Scanner::string() {
   }
   advance();
 
-  std::string value = source.substr(start + 1, current - 1);
+  std::string value = source.substr(start + 1, current - start - 2);
   addToken(TokenType::STR, value);
 }
 
@@ -158,14 +158,14 @@ void Scanner::number() {
     while (isDigit(peek()))
       advance();
   }
-  addToken(TokenType::NUM, std::stod(source.substr(start, current)));
+  addToken(TokenType::NUM, std::stod(source.substr(start, current - start)));
 }
 
 void Scanner::identifier() {
   while (isAlpha(peek()))
     advance();
 
-  std::string text = source.substr(start, current);
+  std::string text = source.substr(start, current - start);
 
   auto type = keywords.find(text);
   if (type == keywords.end()) {
@@ -185,6 +185,6 @@ void Scanner::addToken(TokenType type) { addToken(type, std::nullopt); }
 
 void Scanner::addToken(
     TokenType type, std::optional<std::variant<std::string, double>> literal) {
-  std::string text = source.substr(start, current);
+  std::string text = source.substr(start, current - start);
   tokens.push_back({type, text, literal});
 }
