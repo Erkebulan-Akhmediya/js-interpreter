@@ -1,10 +1,9 @@
 #include "token.h"
 #include <ostream>
-#include <string>
 #include <variant>
 
-Token::Token(TokenType p_type, std::string p_lexeme,
-             std::optional<std::variant<std::string, double>> p_literal)
+Token::Token(TokenType p_type, std::string_view p_lexeme,
+             std::optional<std::variant<std::string_view, double>> p_literal)
     : type(p_type), lexeme(p_lexeme), literal(p_literal) {};
 
 // print only the lexeme for now

@@ -1,6 +1,7 @@
 #include "scanner.h"
 #include "token.h"
 #include <string>
+#include <string_view>
 #include <vector>
 
 const std::unordered_map<std::string, TokenType> Scanner::keywords = {
@@ -10,7 +11,7 @@ const std::unordered_map<std::string, TokenType> Scanner::keywords = {
     {"const", TokenType::CONST}, {"var", TokenType::VAR},
 };
 
-Scanner::Scanner(std::string p_source) : source(p_source) {}
+Scanner::Scanner(std::string_view p_source) : source(p_source) {}
 
 bool Scanner::is_at_end() { return current >= source.size(); }
 
@@ -145,7 +146,7 @@ void Scanner::string() {
   }
   advance();
 
-  std::string value = source.substr(start + 1, current - start - 2);
+  std::string_view value = source.substr(start + 1, current - start - 2);
   addToken(TokenType::STR, value);
 }
 
@@ -158,16 +159,17 @@ void Scanner::number() {
     while (isDigit(peek()))
       advance();
   }
-  addToken(TokenType::NUM, std::stod(source.substr(start, current - start)));
+  std::string num{source.substr(start, current - start)};
+  addToken(TokenType::NUM, std::stod(num));
 }
 
 void Scanner::identifier() {
   while (isAlpha(peek()))
     advance();
 
-  std::string text = source.substr(start, current - start);
+  std::string_view text = source.substr(start, current - start);
 
-  auto type = keywords.find(text);
+  auto type = keywords.find(std::string(text));
   if (type == keywords.end()) {
     addToken(TokenType::IDENTIFIER);
   } else {
@@ -184,7 +186,8 @@ inline bool Scanner::isAlpha(char c) {
 void Scanner::addToken(TokenType type) { addToken(type, std::nullopt); }
 
 void Scanner::addToken(
-    TokenType type, std::optional<std::variant<std::string, double>> literal) {
-  std::string text = source.substr(start, current - start);
+    TokenType type,
+    std::optional<std::variant<std::string_view, double>> literal) {
+  std::string_view text = source.substr(start, current - start);
   tokens.push_back({type, text, literal});
 }
