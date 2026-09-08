@@ -1,0 +1,11 @@
+expression -> literal | unary | binary | ternary | griouping;
+
+literal -> NUM | STR | "true" | "false" | "null";
+
+unary -> ("-" | "!") expression | expression ("++" | "--");
+
+binary -> expression operator expression;
+
+ternary -> expression "?" expression ":" expression;
+
+operator -> "==" | "!=" | ">" | ">=" | "<" | "<=" | "+" | "+=" | "-" | "-=" | "/" | "/=" | "*" | "*=" | "%" | "%=";
