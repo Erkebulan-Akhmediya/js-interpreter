@@ -4,7 +4,7 @@
 #include <string_view>
 #include <vector>
 
-const std::unordered_map<std::string, TokenType> Scanner::keywords = {
+const std::unordered_map<std::string_view, TokenType> Scanner::keywords = {
     {"let", TokenType::LET},     {"if", TokenType::IF},
     {"else", TokenType::ELSE},   {"for", TokenType::FOR},
     {"while", TokenType::WHILE}, {"function", TokenType::FUNCTION},
@@ -169,7 +169,7 @@ void Scanner::identifier() {
 
   std::string_view text = source.substr(start, current - start);
 
-  auto type = keywords.find(std::string(text));
+  auto type = keywords.find(text);
   if (type == keywords.end()) {
     addToken(TokenType::IDENTIFIER);
   } else {

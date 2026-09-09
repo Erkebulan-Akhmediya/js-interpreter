@@ -8,7 +8,7 @@
 
 class Scanner {
 private:
-  const static std::unordered_map<std::string, TokenType> keywords;
+  const static std::unordered_map<std::string_view, TokenType> keywords;
 
   std::string_view source;
   std::vector<Token> tokens;
