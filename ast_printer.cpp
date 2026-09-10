@@ -12,7 +12,7 @@ private:
   std::string parenthesize(std::string name, std::vector<Expr *> exprs) const {
     std::string node = "(" + name;
     for (auto expr : exprs) {
-      node += " " + expr->accept(*this);
+      node += " " + std::any_cast<std::string>(expr->accept(*this));
     }
     node += ")";
     return node;
@@ -57,17 +57,18 @@ public:
 };
 
 // just to test
-#include <iostream>
+// #include <iostream>
 
-int main() {
-  auto hundred23 = std::make_unique<Literal>(123);
-  Token minus(TokenType::MINUS, "-", std::nullopt);
-  auto minus123 = std::make_unique<Unary>(minus, std::move(hundred23));
+// int main() {
+//   auto hundred23 = std::make_unique<Literal>(123);
+//   Token minus(TokenType::MINUS, "-", std::nullopt);
+//   auto minus123 = std::make_unique<Unary>(minus, std::move(hundred23));
 
-  auto fourty5 = std::make_unique<Literal>(45.32);
-  auto group45 = std::make_unique<Grouping>(std::move(fourty5));
-  Token star(TokenType::STAR, "*", std::nullopt);
-  auto expr =
-      std::make_unique<Binary>(std::move(minus123), std::move(group45), star);
-  std::cout << AstPrinter().print(expr.get());
-}
+//   auto fourty5 = std::make_unique<Literal>(45.32);
+//   auto group45 = std::make_unique<Grouping>(std::move(fourty5));
+//   Token star(TokenType::STAR, "*", std::nullopt);
+//   auto expr =
+//       std::make_unique<Binary>(std::move(minus123), std::move(group45),
+//       star);
+//   std::cout << AstPrinter().print(expr.get());
+// }

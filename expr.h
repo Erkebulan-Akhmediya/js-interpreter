@@ -35,7 +35,7 @@ struct Literal : Expr {
   Literal(double v) : value(v) {};
   Literal(std::string v) : value(v) {};
 
-  template <typename T> T accept(const Visitor &visitor) {
+  std::any accept(const Visitor &visitor) {
     return visitor.visitLiteralExpr(this);
   };
 };
@@ -45,7 +45,7 @@ struct Grouping : Expr {
 
   Grouping(std::unique_ptr<Expr> e) : expr(std::move(e)) {};
 
-  template <typename T> T accept(const Visitor &visitor) {
+  std::any accept(const Visitor &visitor) {
     return visitor.visitGroupingExpr(this);
   };
 };
@@ -56,7 +56,7 @@ struct Unary : Expr {
 
   Unary(Token o, std::unique_ptr<Expr> e) : op(o), expr(std::move(e)) {};
 
-  template <typename T> T accept(const Visitor &visitor) {
+  std::any accept(const Visitor &visitor) {
     return visitor.visitUnaryExpr(this);
   };
 };
@@ -69,7 +69,7 @@ struct Binary : Expr {
   Binary(std::unique_ptr<Expr> l, std::unique_ptr<Expr> r, Token o)
       : left(std::move(l)), right(std::move(r)), op(o) {};
 
-  template <typename T> T accept(const Visitor &visitor) {
+  std::any accept(const Visitor &visitor) {
     return visitor.visitBinaryExpr(this);
   };
 };
@@ -83,7 +83,7 @@ struct Ternary : Expr {
           std::unique_ptr<Expr> s)
       : condition(std::move(c)), first(std::move(f)), second(std::move(s)) {};
 
-  template <typename T> T accept(const Visitor &visitor) {
+  std::any accept(const Visitor &visitor) {
     return visitor.visitTernaryExpr(this);
   };
 };
