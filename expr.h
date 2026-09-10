@@ -14,11 +14,11 @@ template <typename T> struct Binary;
 template <typename T> struct Ternary;
 
 template <typename T> struct Visitor {
-  virtual T visitLiteralExpr(const Literal<T> &expr) const = 0;
-  virtual T visitGroupingExpr(const Grouping<T> &expr) const = 0;
-  virtual T visitUnaryExpr(const Unary<T> &expr) const = 0;
-  virtual T visitBinaryExpr(const Binary<T> &expr) const = 0;
-  virtual T visitTernaryExpr(const Ternary<T> &expr) const = 0;
+  virtual T visitLiteralExpr(const Literal<T> *expr) const = 0;
+  virtual T visitGroupingExpr(const Grouping<T> *expr) const = 0;
+  virtual T visitUnaryExpr(const Unary<T> *expr) const = 0;
+  virtual T visitBinaryExpr(const Binary<T> *expr) const = 0;
+  virtual T visitTernaryExpr(const Ternary<T> *expr) const = 0;
 };
 
 template <typename T> struct Expr {
@@ -28,26 +28,34 @@ template <typename T> struct Expr {
 template <typename T> struct Literal : Expr<T> {
   std::optional<std::variant<std::string, double>> value;
 
-  Literal(std::variant<std::string, double> v);
+  Literal() : value(std::nullopt) {};
+  Literal(double v) : value(v) {};
+  Literal(std::string v) : value(v) {};
 
-  T accept(const Visitor<T> &visitor) override;
+  T accept(const Visitor<T> &visitor) override {
+    return visitor.visitLiteralExpr(this);
+  };
 };
 
 template <typename T> struct Grouping : Expr<T> {
   std::unique_ptr<Expr<T>> expr;
 
-  Grouping(std::unique_ptr<Expr<T>> e);
+  Grouping(std::unique_ptr<Expr<T>> e) : expr(std::move(e)) {};
 
-  T accept(const Visitor<T> &visitor) override;
+  T accept(const Visitor<T> &visitor) override {
+    return visitor.visitGroupingExpr(this);
+  };
 };
 
 template <typename T> struct Unary : Expr<T> {
   const Token op;
   std::unique_ptr<Expr<T>> expr;
 
-  Unary(Token o, std::unique_ptr<Expr<T>> e);
+  Unary(Token o, std::unique_ptr<Expr<T>> e) : op(o), expr(std::move(e)) {};
 
-  T accept(const Visitor<T> &visitor) override;
+  T accept(const Visitor<T> &visitor) override {
+    return visitor.visitUnaryExpr(this);
+  };
 };
 
 template <typename T> struct Binary : Expr<T> {
@@ -55,9 +63,12 @@ template <typename T> struct Binary : Expr<T> {
   std::unique_ptr<Expr<T>> right;
   const Token op;
 
-  Binary(std::unique_ptr<Expr<T>> l, std::unique_ptr<Expr<T>> r, Token o);
+  Binary(std::unique_ptr<Expr<T>> l, std::unique_ptr<Expr<T>> r, Token o)
+      : left(std::move(l)), right(std::move(r)), op(o) {};
 
-  T accept(const Visitor<T> &visitor) override;
+  T accept(const Visitor<T> &visitor) override {
+    return visitor.visitBinaryExpr(this);
+  };
 };
 
 template <typename T> struct Ternary : Expr<T> {
@@ -66,9 +77,12 @@ template <typename T> struct Ternary : Expr<T> {
   std::unique_ptr<Expr<T>> second;
 
   Ternary(std::unique_ptr<Expr<T>> c, std::unique_ptr<Expr<T>> f,
-          std::unique_ptr<Expr<T>> s);
+          std::unique_ptr<Expr<T>> s)
+      : condition(std::move(c)), first(std::move(f)), second(std::move(s)) {};
 
-  T accept(const Visitor<T> &visitor) override;
+  T accept(const Visitor<T> &visitor) override {
+    return visitor.visitTernaryExpr(this);
+  };
 };
 
 #endif
