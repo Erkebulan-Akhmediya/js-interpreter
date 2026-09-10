@@ -2,6 +2,7 @@
 #define EXPR
 
 #include "token.h"
+#include <memory>
 #include <optional>
 #include <string>
 #include <variant>
@@ -33,38 +34,39 @@ template <typename T> struct Literal : Expr<T> {
 };
 
 template <typename T> struct Grouping : Expr<T> {
-  const Expr<T> &expr;
+  std::unique_ptr<Expr<T>> expr;
 
-  Grouping(const Expr<T> &e);
+  Grouping(std::unique_ptr<Expr<T>> e);
 
   T accept(const Visitor<T> &visitor) override;
 };
 
 template <typename T> struct Unary : Expr<T> {
   const Token op;
-  const Expr<T> &expr;
+  std::unique_ptr<Expr<T>> expr;
 
-  Unary(Token o, const Expr<T> &e);
+  Unary(Token o, std::unique_ptr<Expr<T>> e);
 
   T accept(const Visitor<T> &visitor) override;
 };
 
 template <typename T> struct Binary : Expr<T> {
-  const Expr<T> &left;
-  const Expr<T> &right;
+  std::unique_ptr<Expr<T>> left;
+  std::unique_ptr<Expr<T>> right;
   const Token op;
 
-  Binary(const Expr<T> &l, const Expr<T> &r, Token o);
+  Binary(std::unique_ptr<Expr<T>> l, std::unique_ptr<Expr<T>> r, Token o);
 
   T accept(const Visitor<T> &visitor) override;
 };
 
 template <typename T> struct Ternary : Expr<T> {
-  const Expr<T> &condition;
-  const Expr<T> &first;
-  const Expr<T> &second;
+  std::unique_ptr<Expr<T>> condition;
+  std::unique_ptr<Expr<T>> first;
+  std::unique_ptr<Expr<T>> second;
 
-  Ternary(const Expr<T> &c, const Expr<T> &f, const Expr<T> &s);
+  Ternary(std::unique_ptr<Expr<T>> c, std::unique_ptr<Expr<T>> f,
+          std::unique_ptr<Expr<T>> s);
 
   T accept(const Visitor<T> &visitor) override;
 };

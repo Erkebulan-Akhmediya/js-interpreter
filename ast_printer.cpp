@@ -33,6 +33,21 @@ public:
   }
 
   std::string visitGroupingExpr(const Grouping<std::string> &expr) const {
-    return "";
+    return parenthesize("group",
+                        std::vector<Expr<std::string> *>{expr.expr.get()});
+  }
+
+  std::string visitUnaryExpr(const Unary<std::string> &expr) const {
+    return parenthesize(std::string(expr.op.lexeme), {expr.expr.get()});
+  }
+
+  std::string visitBinaryExpr(const Binary<std::string> &expr) const {
+    return parenthesize(std::string(expr.op.lexeme),
+                        {expr.left.get(), expr.right.get()});
+  }
+
+  std::string visitTernaryExpr(const Ternary<std::string> &expr) const {
+    return parenthesize(
+        "ternary", {expr.condition.get(), expr.first.get(), expr.second.get()});
   }
 };
