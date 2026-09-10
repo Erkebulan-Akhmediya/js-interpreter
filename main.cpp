@@ -27,7 +27,7 @@ void runPrompt() {
   }
 }
 
-int main(int argc, char *argv[]) {
+int main2(int argc, char *argv[]) {
   if (argc > 2) {
     std::cout << "usage: js [script]\n";
   } else if (argc == 2) {
@@ -35,4 +35,5 @@ int main(int argc, char *argv[]) {
   } else {
     runPrompt();
   }
+  return 0;
 }
