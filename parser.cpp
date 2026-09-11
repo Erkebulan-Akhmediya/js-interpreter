@@ -27,6 +27,26 @@ std::unique_ptr<Expr> Parser::comparison() {
   return expr;
 }
 
+std::unique_ptr<Expr> Parser::term() {
+  std::unique_ptr<Expr> expr = factor();
+  while (match(TokenType::PLUS, TokenType::MINUS)) {
+    Token op = previous();
+    std::unique_ptr<Expr> right = factor();
+    expr = std::make_unique<Binary>(std::move(expr), std::move(right), op);
+  }
+  return expr;
+}
+
+std::unique_ptr<Expr> Parser::factor() {
+  std::unique_ptr<Expr> expr = unary();
+  while (match(TokenType::STAR, TokenType::SLASH)) {
+    Token op = previous();
+    std::unique_ptr<Expr> right = unary();
+    expr = std::make_unique<Binary>(std::move(expr), std::move(right), op);
+  }
+  return expr;
+}
+
 bool Parser::match(std::same_as<TokenType> auto... types) {
   for (auto type : {types...}) {
     if (check(type)) {
