@@ -25,6 +25,7 @@ struct Visitor {
 };
 
 struct Expr {
+  virtual ~Expr() = default;
   virtual std::any accept(const Visitor &visitor) = 0;
 };
 
