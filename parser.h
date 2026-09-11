@@ -18,6 +18,7 @@ private:
   std::unique_ptr<Expr> term();
   std::unique_ptr<Expr> factor();
   std::unique_ptr<Expr> unary();
+  std::unique_ptr<Expr> primary();
 
   bool match(std::same_as<TokenType> auto... types);
   bool check(TokenType type);

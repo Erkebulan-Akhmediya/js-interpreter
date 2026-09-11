@@ -47,6 +47,21 @@ std::unique_ptr<Expr> Parser::factor() {
   return expr;
 }
 
+std::unique_ptr<Expr> Parser::unary() {
+  if (match(TokenType::EXCLAMATION, TokenType::MINUS)) {
+    Token op = previous();
+    std::unique_ptr<Expr> expr = unary();
+    return std::make_unique<Unary>(op, std::move(expr));
+  } else {
+    std::unique_ptr<Expr> expr = primary();
+    if (match(TokenType::INCREMENT, TokenType::DECREMENT)) {
+      Token op = previous();
+      return std::make_unique<Unary>(op, std::move(expr));
+    }
+    return expr;
+  }
+}
+
 bool Parser::match(std::same_as<TokenType> auto... types) {
   for (auto type : {types...}) {
     if (check(type)) {
@@ -72,3 +87,5 @@ Token Parser::advance() {
 Token Parser::peek() { return tokens.at(current); }
 
 Token Parser::previous() { return tokens.at(current - 1); }
+
+bool Parser::isAtEnd() { return peek().type == TokenType::END; }
