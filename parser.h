@@ -5,7 +5,14 @@
 #include "token.h"
 #include <concepts>
 #include <memory>
+#include <stdexcept>
 #include <vector>
+
+
+class ParserError : std::runtime_error {
+public:
+  using std::runtime_error::runtime_error;
+};
 
 class Parser {
 private:
@@ -26,11 +33,14 @@ private:
   Token advance();
   Token peek();
   Token previous();
+  void sync();
 
   bool isAtEnd();
 
 public:
-  Parser(std::vector<Token> t) : tokens(t) {}
+  Parser(std::vector<Token> t) : tokens(t) {};
+
+  std::unique_ptr<Expr> parse();
 };
 
 #endif

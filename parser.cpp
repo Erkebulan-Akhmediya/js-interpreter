@@ -8,6 +8,16 @@
 #include <string_view>
 #include <variant>
 
+std::unique_ptr<Expr> Parser::parse() {
+  try {
+    return expression();
+  } catch (ParserError e) {
+    auto expr = std::unique_ptr<Expr>();
+    expr.reset();
+    return expr;
+  }
+}
+
 std::unique_ptr<Expr> Parser::expression() { return equality(); }
 
 std::unique_ptr<Expr> Parser::equality() {
@@ -89,6 +99,26 @@ std::unique_ptr<Expr> Parser::primary() {
   }
 
   throw std::runtime_error("expression expected");
+}
+
+void Parser::sync() {
+  advance();
+  while (!isAtEnd()) {
+    if (previous().type == TokenType::SEMICOL)
+      return;
+    switch (peek().type) {
+    case TokenType::LET:
+    case TokenType::IF:
+    case TokenType::FOR:
+    case TokenType::WHILE:
+    case TokenType::FUNCTION:
+    case TokenType::CONST:
+    case TokenType::VAR:
+      return;
+    default:
+      advance();
+    }
+  }
 }
 
 bool Parser::match(std::same_as<TokenType> auto... types) {
