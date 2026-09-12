@@ -3,6 +3,10 @@
 #include "token.h"
 #include <concepts>
 #include <memory>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <variant>
 
 std::unique_ptr<Expr> Parser::expression() { return equality(); }
 
@@ -60,6 +64,31 @@ std::unique_ptr<Expr> Parser::unary() {
     }
     return expr;
   }
+}
+
+std::unique_ptr<Expr> Parser::primary() {
+  if (match(TokenType::TRUE))
+    return std::make_unique<Literal>(true);
+  if (match(TokenType::FALSE))
+    return std::make_unique<Literal>(false);
+  if (match(TokenType::NULL_VALUE))
+    return std::make_unique<Literal>();
+
+  if (match(TokenType::NUM, TokenType::STR)) {
+    std::variant<std::string_view, double> variant = previous().literal.value();
+    if (auto val = std::get_if<std::string_view>(&variant))
+      return std::make_unique<Literal>(std::string(*val));
+    return std::make_unique<Literal>(*std::get_if<double>(&variant));
+  }
+
+  if (match(TokenType::LEFT_BRACET)) {
+    auto expr = expression();
+    if (!check(TokenType::RIGHT_BRACET))
+      throw std::runtime_error(") expected");
+    return std::make_unique<Grouping>(std::move(expr));
+  }
+
+  throw std::runtime_error("expression expected");
 }
 
 bool Parser::match(std::same_as<TokenType> auto... types) {

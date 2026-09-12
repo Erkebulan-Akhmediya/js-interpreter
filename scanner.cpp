@@ -5,10 +5,12 @@
 #include <vector>
 
 const std::unordered_map<std::string_view, TokenType> Scanner::keywords = {
-    {"let", TokenType::LET},     {"if", TokenType::IF},
-    {"else", TokenType::ELSE},   {"for", TokenType::FOR},
-    {"while", TokenType::WHILE}, {"function", TokenType::FUNCTION},
-    {"const", TokenType::CONST}, {"var", TokenType::VAR},
+    {"let", TokenType::LET},         {"if", TokenType::IF},
+    {"else", TokenType::ELSE},       {"for", TokenType::FOR},
+    {"while", TokenType::WHILE},     {"function", TokenType::FUNCTION},
+    {"const", TokenType::CONST},     {"var", TokenType::VAR},
+    {"true", TokenType::TRUE},       {"false", TokenType::FALSE},
+    {"null", TokenType::NULL_VALUE},
 };
 
 Scanner::Scanner(std::string_view p_source) : source(p_source) {}

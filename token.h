@@ -57,6 +57,9 @@ enum class TokenType {
   FUNCTION,
   CONST,
   VAR,
+  TRUE,
+  FALSE,
+  NULL_VALUE,
 
   END
 };
