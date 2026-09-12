@@ -11,7 +11,7 @@
 std::unique_ptr<Expr> Parser::parse() {
   try {
     return expression();
-  } catch (ParserError e) {
+  } catch (ParserError &e) {
     auto expr = std::unique_ptr<Expr>();
     expr.reset();
     return expr;

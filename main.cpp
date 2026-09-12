@@ -1,3 +1,5 @@
+#include "ast_printer.h"
+#include "parser.h"
 #include "scanner.h"
 #include <fstream>
 #include <iostream>
@@ -7,10 +9,9 @@
 void run(std::stringstream &source) {
   Scanner scanner(source.str());
   auto tokens = scanner.scanTokens();
-  // print for now
-  for (auto token : tokens) {
-    std::cout << token << '\n';
-  }
+  Parser parser(tokens);
+  auto expr = parser.parse();
+  std::cout << AstPrinter().print(expr.get()) << '\n';
 }
 
 void runFile(std::string path) {
